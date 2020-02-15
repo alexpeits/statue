@@ -17,9 +17,9 @@ let
   postsDir = conf.postsDir;
   staticDir = conf.staticDir;
 
-  navPages = map utils.parseMd conf.navPages;
+  navPages = map utils.parseFile conf.navPages;
   navPagesScript =
-        let
+    let
       script = md: ''
         cat << \EOF > $out/${md.fname}.html
           ${baseTmpl md.meta.title md.html}
@@ -30,7 +30,7 @@ let
 
   baseTmpl = tmpl.base navPages;
 
-  posts = map utils.parseMd (utils.allFilepathsWithExtIn postsDir "md");
+  posts = map utils.parseFile (utils.allFilepathsWithExtsIn postsDir [ "md" "nix" ]);
   postsTable = baseTmpl "Posts" (tmpl.postsTable posts);
   postPagesScript =
     let

@@ -67,7 +67,10 @@ rec {
   # preprocess meta values and add some defaults
   processMeta = fname: meta:
     meta // {
-      title = lib.elemAt meta.title 0;
+      title =
+        if b.typeOf meta.title == "list"
+        then lib.elemAt meta.title 0
+        else meta.title;
       date = extractDate fname;
       tags = if (meta ? tags) then meta.tags else [];
     };
@@ -88,19 +91,29 @@ rec {
 
   # filepath helpers
   allFilesIn = path: b.attrNames (b.readDir path);
-  allFilepathsIn = path: map (n: path + ("/" + n)) (allFilesIn path);
-  allFilesWithExtIn = path: ext:
-    b.filter (n: b.match ".*\\.${ext}" n != null) (allFilesIn path);
-  allFilepathsWithExtIn = path: ext:
-    map (n: path + ("/" + n)) (allFilesWithExtIn path ext);
+  allFilesWithExtsIn = path: exts:
+    b.filter (n: b.match ''.*\.(${lib.concatStringsSep "|" exts})'' n != null) (allFilesIn path);
+  allFilepathsWithExtsIn = path: exts:
+    map (n: path + ("/" + n)) (allFilesWithExtsIn path exts);
 
-  getFname = path:
-    lib.head (lib.splitString "." (lib.last (lib.splitString "/" (b.toString path))));
+  getParts = path:
+    let
+      parts = lib.splitString "." (lib.last (lib.splitString "/" (b.toString path)));
+    in
+      { fname = lib.head parts; ext = lib.last parts; };
 
   py = pkgs.python37.withPackages (p: [ p.markdown ]);
+  parseFile = path:
+    let
+      ext = (getParts path).ext;
+    in
+      if ext == "md" then parseMd path else
+        if ext == "nix" then parseNix path else
+          abort "Unknown extension ${ext}";
+
   parseMd = path:
     let
-      fname = getFname path;
+      fname = (getParts path).fname;
       name = b.replaceStrings [ "/" "." ] [ "-" "-" ] fname;
 
       meta = pkgs.runCommand (name + "-meta") { buildInputs = [ py ]; } ''
@@ -118,4 +131,20 @@ rec {
         fname = fname;
       };
 
+  parseNix = path:
+    let
+      fname = (getParts path).fname;
+      name = b.replaceStrings [ "/" "." ] [ "-" "-" ] fname;
+      file = import path { pkgs = pkgs; };
+      html = pkgs.runCommand (name + "-html") { buildInputs = [ pkgs.pandoc ]; } ''
+        pandoc --mathjax --to=html << \EOF > $out
+          ${file.content}
+        EOF
+      '';
+    in
+      {
+        meta = processMeta fname file.meta;
+        html = lib.readFile html;
+        fname = fname;
+      };
 }
