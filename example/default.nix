@@ -2,6 +2,7 @@ let
   config = {
     siteTitle = "Example site";
     navPages = [ ./about.md ];
+    rootDir = ./.;
     postsDir = ./posts;
     staticDir = ./static;
     htmlHead = ''

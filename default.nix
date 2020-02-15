@@ -61,7 +61,7 @@ let
   buildInfo = "build-info.txt";
   buildInfoScript = ''
     rm -f $out/${buildInfo}
-    git -C ${./.} log -1 --format="%H%n%cd" > $out/${buildInfo}
+    git -C ${conf.rootDir} log -1 --format="%H%n%cd" > $out/${buildInfo}
   '';
 
 in
