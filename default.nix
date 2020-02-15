@@ -15,7 +15,6 @@ let
     } // templateOverrides;
 
   postsDir = conf.postsDir;
-  staticDir = conf.staticDir;
 
   navPages = map utils.parseFile conf.navPages;
   navPagesScript =
@@ -64,16 +63,13 @@ let
     git -C ${conf.rootDir} log -1 --format="%H%n%cd" > $out/${buildInfo}
   '';
 
-  extraFilesScript = ''
-    cp -R ${conf.extraFilesDir}/* $out/
-  '';
-
 in
 
 pkgs.runCommand "site" { buildInputs = [ pkgs.git ]; } ''
-  # static files
-  mkdir -p $out/static
-  cp -R ${staticDir}/* $out/static
+  mkdir $out
+
+  # copy files from copyFilesDir as-is
+  cp -R ${conf.copyFilesDir}/* $out/
 
   # index
   cat << \EOF > $out/index.html
@@ -97,7 +93,4 @@ pkgs.runCommand "site" { buildInputs = [ pkgs.git ]; } ''
   ${navPagesScript}
 
   ${if conf.buildInfo then buildInfoScript else ""}
-
-  # extra files, copy as-is
-  ${if conf.extraFilesDir != null then extraFilesScript else ""}
 ''

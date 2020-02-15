@@ -2,8 +2,9 @@
 
 let
 
-  defaults = {
+  defaults = config: {
     navPages = [];
+    copyFilesDir = config.rootDir + "/static";
     extraFilesDir = null;
     buildInfo = true;
     htmlHead = "";
@@ -16,6 +17,5 @@ in
     assert config ? siteTitle;
     assert config ? rootDir;
     assert config ? postsDir;
-    assert config ? staticDir;
-    defaults // config;
+    defaults config // config;
 }

@@ -4,12 +4,10 @@ let
     navPages = [ ./about.md ];
     rootDir = ./.;
     postsDir = ./posts;
-    staticDir = ./static;
-    extraFilesDir = ./extra_files;
     buildInfo = false;
     htmlHead = ''
-      <link rel="stylesheet" href="/static/css/default.css" />
-      <link rel="stylesheet" href="/static/css/syntax.css" />
+      <link rel="stylesheet" href="/css/default.css" />
+      <link rel="stylesheet" href="/css/syntax.css" />
     '';
   };
 in
