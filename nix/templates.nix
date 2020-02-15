@@ -1,19 +1,20 @@
 { pkgs ? import <nixpkgs> {}, config }:
 
-with pkgs.lib;
-
 let
 
-  b = pkgs.builtins;
+  lib = pkgs.lib;
+  b = builtins;
   utils = import ./utils.nix {};
-  postUrl = { fname, ... }: "/posts/${fname}.html";
-  tagUrl = tag: "/tags/${tag}.html";
+  mkNavPage = md:
+    ''<a class="nav-link" href="/${md.fname}.html">${md.meta.title}</a>'';
 
 in
 
-{
+rec {
+  postUrl = { fname, ... }: "/posts/${fname}.html";
+  tagUrl = tag: "/tags/${tag}.html";
 
-  base = title: content: ''
+  base = navPages: title: content: ''
     <!doctype html>
     <html lang="en">
       <head>
@@ -45,7 +46,7 @@ in
           <nav>
             <a class="nav-link" href="/">Home</a>
             <a class="nav-link" href="/tags.html">Tags</a>
-            <a class="nav-link" href="/about.html">About</a>
+            ${lib.concatStringsSep "\n" (map mkNavPage navPages)}
           </nav>
         </header>
 
@@ -77,7 +78,7 @@ in
 
   postSummaryTable = md: ''
     <tr>
-      <td class="posts-table-date">${fmtDateShort md.meta.date}</td>
+      <td class="posts-table-date">${utils.fmtDateShort md.meta.date}</td>
       <td>
         <a href="${postUrl md}" class="posts-table-title">${md.meta.title}</a>
         <div class="posts-table-tags tags">
@@ -120,5 +121,4 @@ in
       ${b.concatStringsSep "\n" (lib.attrValues (lib.mapAttrs tagSummaryList tags))}
     </ul>
   '';
-
 }

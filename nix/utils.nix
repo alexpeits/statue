@@ -1,14 +1,13 @@
 { pkgs ? import <nixpkgs> {} }:
 
-with pkgs.lib;
-
 let
 
-  b = pkgs.builtins;
+  lib = pkgs.lib;
+  b = builtins;
 
 in
 
-{
+rec {
 
   # from a filename that looks like this: "2020-10-11-whatever.md", return a
   # record of the date components
@@ -29,6 +28,12 @@ in
       y2 = dt2.year; m2 = dt2.month; d2 = dt2.day;
     in
       if y1 == y2 then (if m1 == m2 then d1 < d2 else m1 < m2) else y1 < y2;
+
+  sortMds = mds:
+    let
+      cmp = md1: md2: cmpDates md1.meta.date md2.meta.date;
+    in
+      lib.sort (x: y: ! (cmp x y)) mds;
 
   # format a date like this: October 11, 2020
   fmtDate = { year, month, day }:
@@ -88,5 +93,29 @@ in
     b.filter (n: b.match ".*\\.${ext}" n != null) (allFilesIn path);
   allFilepathsWithExtIn = path: ext:
     map (n: path + ("/" + n)) (allFilesWithExtIn path ext);
+
+  getFname = path:
+    lib.head (lib.splitString "." (lib.last (lib.splitString "/" (b.toString path))));
+
+  py = pkgs.python37.withPackages (p: [ p.markdown ]);
+  parseMd = path:
+    let
+      fname = getFname path;
+      name = b.replaceStrings [ "/" "." ] [ "-" "-" ] fname;
+
+      meta = pkgs.runCommand (name + "-meta") { buildInputs = [ py ]; } ''
+        python ${../scripts/front_matter_to_json.py} -i ${path} -o $out
+      '';
+
+      html = pkgs.runCommand (name + "-html") { buildInputs = [ pkgs.pandoc ]; } ''
+        pandoc ${path} --mathjax --to=html > $out
+      '';
+
+    in
+      {
+        meta = processMeta fname (lib.importJSON meta);
+        html = lib.readFile html;
+        fname = fname;
+      };
 
 }

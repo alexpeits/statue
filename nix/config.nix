@@ -6,17 +6,14 @@ let
     postsDir = "posts";
     staticDir = "static";
     extraFilesDir = "extra_files";
-    otherPages = [];
+    navPages = [];
     buildInfo = true;
   };
-
-  checkConfig = config:
-    assert config ? siteTitle;
-    assert config ? useTags;
-    config;
 
 in
 
 {
-  mkConfig = config: defaults // config;
+  mkConfig = config:
+    assert config ? siteTitle;
+    defaults // config;
 }
