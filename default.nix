@@ -64,6 +64,10 @@ let
     git -C ${conf.rootDir} log -1 --format="%H%n%cd" > $out/${buildInfo}
   '';
 
+  extraFilesScript = ''
+    cp -R ${conf.extraFilesDir}/* $out/
+  '';
+
 in
 
 pkgs.runCommand "site" { buildInputs = [ pkgs.git ]; } ''
@@ -93,4 +97,7 @@ pkgs.runCommand "site" { buildInputs = [ pkgs.git ]; } ''
   ${navPagesScript}
 
   ${if conf.buildInfo then buildInfoScript else ""}
+
+  # extra files, copy as-is
+  ${if conf.extraFilesDir != null then extraFilesScript else ""}
 ''

@@ -4,6 +4,7 @@ let
 
   defaults = {
     navPages = [];
+    extraFilesDir = null;
     buildInfo = true;
     htmlHead = "";
   };
