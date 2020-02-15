@@ -22,21 +22,7 @@ rec {
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>${config.siteTitle} - ${title}</title>
-        <link rel="shortcut icon" type="image/png" href="/static/images/favicon.png"/>
-        <link rel="stylesheet" href="/static/css/default.css" />
-        <link rel="stylesheet" href="/static/css/syntax.css" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400" />
-        <script type="text/x-mathjax-config">
-         MathJax.Hub.Config({
-           "HTML-CSS": { linebreaks: { automatic: true } },
-           SVG: { linebreaks: { automatic: true } },
-           messageStyle: "none"
-         });
-        </script>
-        <script
-          src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-          type="text/javascript">
-        </script>
+        ${config.htmlHead}
       </head>
       <body>
         <header>

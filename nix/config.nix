@@ -3,11 +3,9 @@
 let
 
   defaults = {
-    postsDir = "posts";
-    staticDir = "static";
-    extraFilesDir = "extra_files";
     navPages = [];
     buildInfo = true;
+    htmlHead = "";
   };
 
 in
@@ -15,5 +13,7 @@ in
 {
   mkConfig = config:
     assert config ? siteTitle;
+    assert config ? postsDir;
+    assert config ? staticDir;
     defaults // config;
 }

@@ -14,9 +14,8 @@ let
       config = conf;
     } // templateOverrides;
 
-  postsDir = ./. + ("/" + conf.postsDir);
-  staticDir = ./. + ("/" + conf.staticDir);
-  extraFilesDir = ./. + ("/" + conf.extraFilesDir);
+  postsDir = conf.postsDir;
+  staticDir = conf.staticDir;
 
   navPages = map utils.parseMd conf.navPages;
   navPagesScript =
@@ -92,9 +91,6 @@ pkgs.runCommand "site" { buildInputs = [ pkgs.git ]; } ''
 
   # nav pages
   ${navPagesScript}
-
-  # extra files, copy as-is
-  cp -R ${extraFilesDir}/* $out/
 
   ${if conf.buildInfo then buildInfoScript else ""}
 ''
