@@ -1,5 +1,7 @@
 # statue
 
+[![Build Status](https://travis-ci.org/alexpeits/statue.svg?branch=master)](https://travis-ci.org/alexpeits/statue)
+
 `statue` is a very simple and opinionated static site generator, written using
 only nix. To generate the html content, it uses pandoc and a small python script
 to extract the metadata from markdown files.
