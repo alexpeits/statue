@@ -105,7 +105,7 @@ by newlines as in the example above.
 ### Nix posts
 
 Posts in nix can be useful to automate some repetition, e.g.
-[listing your projects](https://github.com/alexpeits/alexpeits.github.io/projects.nix).
+[listing your projects](https://github.com/alexpeits/alexpeits.github.io/blob/develop/projects.nix).
 Nix posts are functions that expect `nixpkgs` as input, and should return a
 record that looks like this:
 
