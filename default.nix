@@ -63,13 +63,18 @@ let
     git -C ${conf.rootDir} log -1 --format="%H%n%cd" > $out/${buildInfo}
   '';
 
+  copyFilesScript =
+    if conf.copyFilesDir != null
+    then "cp -R ${conf.copyFilesDir}/* $out"
+    else "";
+
 in
 
 pkgs.runCommand "site" { buildInputs = [ pkgs.git ]; } ''
   mkdir $out
 
   # copy files from copyFilesDir as-is
-  cp -R ${conf.copyFilesDir}/* $out/
+  ${copyFilesScript}
 
   # index
   cat << \EOF > $out/index.html

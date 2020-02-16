@@ -4,6 +4,7 @@ let
     navPages = [ ./about.md ];
     rootDir = ./.;
     postsDir = ./posts;
+    copyFilesDir = ./static;
     buildInfo = false;
     htmlHead = ''
       <link rel="stylesheet" href="/css/default.css" />

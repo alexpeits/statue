@@ -38,12 +38,13 @@ To call the expression, you need to specify some options in the configuration.
 These are all the options that are configurable:
 
 * `siteTitle` (required) - the site title that's used in the html `title` tag
-* `rootDir` (required) - the root directory for the site
 * `postsDir` (required) - the directory that contains posts
+* `rootDir` (default `null`) - the root directory for the site, used for finding
+  out the root of a git repo to generate the build info
 * `navPages` (default `[]`) - a list of paths to markdown/nix files that form
   the navbar
-* `copyFilesDir` (default `rootDir + "/static"`) - a directory whose contents
-  will be copied as-is to the output folder
+* `copyFilesDir` (default `null`) - a directory whose contents will be copied
+  as-is to the output folder
 * `buildInfo` (default `true`) - whether to create a `build-info.txt` file at
   the site root, containing the commit hash an time
 * `htmlHead` (default `""`) - string that will be added to the html `head` tag,
@@ -61,6 +62,7 @@ let
     navPages = [ ./about.md ];
     rootDir = ./.;
     postsDir = ./posts;
+    copyFilesDir = ./static;
     buildInfo = false;
     htmlHead = ''
       <link rel="stylesheet" href="/css/default.css" />
