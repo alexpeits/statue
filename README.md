@@ -49,7 +49,7 @@ These are all the options that are configurable:
 
 ## Usage
 
-A very basic derivation (see also [example/default.nix](the example one), should
+A very basic derivation (see also [the example](example/default.nix), should
 look like this:
 
 ```nix
