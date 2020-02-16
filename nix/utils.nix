@@ -96,6 +96,7 @@ rec {
   allFilepathsWithExtsIn = path: exts:
     map (n: path + ("/" + n)) (allFilesWithExtsIn path exts);
 
+  # split a path into the base name and the extension
   getParts = path:
     let
       parts = lib.splitString "." (lib.last (lib.splitString "/" (b.toString path)));

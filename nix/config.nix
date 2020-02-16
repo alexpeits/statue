@@ -5,7 +5,6 @@ let
   defaults = config: {
     navPages = [];
     copyFilesDir = config.rootDir + "/static";
-    extraFilesDir = null;
     buildInfo = true;
     htmlHead = "";
   };
