@@ -1,0 +1,12 @@
+os:
+- linux
+language: nix
+nix: 2.2.1
+
+branches:
+  only:
+    - master
+
+script:
+  - cd example
+  - nix-build
