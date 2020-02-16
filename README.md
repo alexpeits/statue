@@ -92,6 +92,7 @@ looks like this:
 ```markdown
 ---
 title: Some post
+description: Description about some post
 tags: one
       two
 ---
@@ -100,7 +101,8 @@ content
 ```
 
 the only required key is `title`, and `tags` can be multiple items, separated
-by newlines as in the example above.
+by newlines as in the example above. `description` is used in the post list and
+it is optional as well.
 
 ### Nix posts
 
@@ -112,6 +114,7 @@ record that looks like this:
 ```nix
 { meta = {
     title = "Some post";
+    description = "Description about some post";
     tags = [ "one" "two" ];
   };
   content = ''

@@ -5,6 +5,10 @@ let
   lib = pkgs.lib;
   b = builtins;
 
+  onlyOne = x:
+    if b.typeOf x == "list"
+    then lib.elemAt x 0
+    else x;
 in
 
 rec {
@@ -67,10 +71,11 @@ rec {
   # preprocess meta values and add some defaults
   processMeta = fname: meta:
     meta // {
-      title =
-        if b.typeOf meta.title == "list"
-        then lib.elemAt meta.title 0
-        else meta.title;
+      title = onlyOne meta.title;
+      description =
+        if (meta ? description)
+        then onlyOne meta.description
+        else null;
       date = extractDate fname;
       tags = if (meta ? tags) then meta.tags else [];
     };

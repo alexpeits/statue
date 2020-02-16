@@ -62,11 +62,18 @@ rec {
     </article>
   '';
 
+  postSummaryTableDescription = md: ''
+    <div class="posts-table-description">
+        ${md.meta.description}
+    </div>
+  '';
+
   postSummaryTable = md: ''
     <tr>
       <td class="posts-table-date">${utils.fmtDateShort md.meta.date}</td>
       <td>
         <a href="${postUrl md}" class="posts-table-title">${md.meta.title}</a>
+        ${if (md.meta.description != null) then postSummaryTableDescription md else ""}
         <div class="posts-table-tags tags">
           ${b.concatStringsSep ", " (map tagLink md.meta.tags)}
         </div>

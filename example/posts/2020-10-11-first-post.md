@@ -1,5 +1,6 @@
 ---
 title: First post
+description: The first post ever
 tags: something
       other
 ---
