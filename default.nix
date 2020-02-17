@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {}, templateOverrides ? {}, config }:
+{ pkgs ? import <nixpkgs> {}, templateOverrides ? (x: x), config }:
 
 let
 
@@ -8,11 +8,8 @@ let
 
   mkConfig = (import ./nix/config.nix { pkgs = pkgs; }).mkConfig;
   conf = mkConfig config;
-  tmpl =
-    import ./nix/templates.nix {
-      pkgs = pkgs;
-      config = conf;
-    } // templateOverrides;
+  oldTmpl = import ./nix/templates.nix { pkgs = pkgs; config = conf; };
+  tmpl = oldTmpl // templateOverrides oldTmpl;
 
   postsDir = conf.postsDir;
 
