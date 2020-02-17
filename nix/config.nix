@@ -19,7 +19,7 @@ in
     let
       conf = defaults config // config;
     in
-      if (conf ? buildInfo && ! conf ? rootDir)
+      if (conf ? buildInfo && conf ? rootDir == null)
       then abort "rootDir is required if buildInfo is true"
       else conf;
 }
