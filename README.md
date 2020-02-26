@@ -43,12 +43,13 @@ These are all the options that are configurable:
   out the root of a git repo to generate the build info
 * `navPages` (default `[]`) - a list of paths to markdown/nix files that form
   the navbar
-* `copyFilesDir` (default `null`) - a directory whose contents will be copied
-  as-is to the output folder
 * `buildInfo` (default `true`) - whether to create a `build-info.txt` file at
   the site root, containing the commit hash an time
 * `htmlHead` (default `""`) - string that will be added to the html `head` tag,
   useful for adding css, scripts and favicons
+* `extraScript` (default `{inputs = p: []; script = "";}`) - extra script to run
+  after generating the site, `inputs` is a function from packages to list of
+  packages that the script should have available
 
 ## Usage
 
@@ -62,12 +63,22 @@ let
     navPages = [ ./about.md ];
     rootDir = ./.;
     postsDir = ./posts;
-    copyFilesDir = ./static;
     buildInfo = false;
     htmlHead = ''
       <link rel="stylesheet" href="/css/default.css" />
       <link rel="stylesheet" href="/css/syntax.css" />
     '';
+    extraScript = {
+      inputs = p: [ p.minify ];
+      script = ''
+        cp -R ${./static/whatever.txt} $out
+
+        mkdir -p $out/css
+        for css in $(find ${./static/css} -name '*.css'); do
+          minify -o $out/css/$(basename $css) $css
+        done
+      '';
+    };
   };
 
   statue = pkgs.fetchFromGitHub {

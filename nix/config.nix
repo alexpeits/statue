@@ -5,9 +5,12 @@ let
   defaults = config: {
     navPages = [];
     rootDir = null;
-    copyFilesDir = null;
     buildInfo = true;
     htmlHead = "";
+    extraScript = {
+      inputs = p: [];
+      script = "";
+    };
   };
 
 in

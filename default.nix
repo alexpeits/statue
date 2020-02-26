@@ -60,18 +60,10 @@ let
     git -C ${conf.rootDir} log -1 --format="%H%n%cd" > $out/${buildInfo}
   '';
 
-  copyFilesScript =
-    if conf.copyFilesDir != null
-    then "cp -R ${conf.copyFilesDir}/* $out"
-    else "";
-
 in
 
-pkgs.runCommand "site" { buildInputs = [ pkgs.git ]; } ''
+pkgs.runCommand "site" { buildInputs = ( [ pkgs.git ] ++ conf.extraScript.inputs pkgs ); } ''
   mkdir $out
-
-  # copy files from copyFilesDir as-is
-  ${copyFilesScript}
 
   # index
   cat << \EOF > $out/index.html
@@ -95,4 +87,6 @@ pkgs.runCommand "site" { buildInputs = [ pkgs.git ]; } ''
   ${navPagesScript}
 
   ${if conf.buildInfo then buildInfoScript else ""}
+
+  ${conf.extraScript.script}
 ''
