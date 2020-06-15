@@ -122,8 +122,8 @@ rec {
       fname = (getParts path).fname;
       name = b.replaceStrings [ "/" "." ] [ "-" "-" ] fname;
 
-      meta = pkgs.runCommand (name + "-meta") { buildInputs = [ py ]; } ''
-        python ${../scripts/front_matter_to_json.py} -i ${path} -o $out
+      meta = pkgs.runCommand (name + "-meta") { buildInputs = [ pkgs.bash pkgs.yq ]; } ''
+        bash -c '${../scripts/extract-yaml-metadata.sh} ${path}' | yq -j -r . > $out
       '';
 
       html = pkgs.runCommand (name + "-html") { buildInputs = [ pkgs.pandoc ]; } ''
